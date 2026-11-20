@@ -1,5 +1,8 @@
 # 日历增强包 · .ics 生成脚本
 
+> **在仓库里运行**：`cd scripts && npm ci`，生成时加 `OUT_DIR=..`，产物落到仓库根目录，供 GitHub Pages 与 jsDelivr 直接读取。
+> 本地开发不加 `OUT_DIR`，产物落 `../output/`。下面的示例都是本地开发写法。
+
 按 PRD v0.2 生成 iPhone 可订阅的日历文件，两层独立：
 
 | 层 | 脚本 | 内容 | 产物 |
