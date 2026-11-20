@@ -68,7 +68,9 @@ function fold(line) {
  * 同一天事件的 UID 完全一致，年更覆盖时不会让客户端把事件当成新的重挂一遍。
  */
 function serializeIcs({ events, calName, prodid, year, uidDomain = 'calendar-enhance.local' }) {
-  const stamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+  // DTSTAMP 默认取当前时间；用 DTSTAMP=20261121T000000Z 可做可复现构建（两次生成字节级一致，便于 diff 核对）
+  const stamp =
+    process.env.DTSTAMP || new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
   const lines = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',

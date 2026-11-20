@@ -59,6 +59,13 @@ OUT_DIR=.. node generate-ics.cjs 2027         # 传一年 → 只产出 calendar
 
 `OUT_DIR` 不传则输出到 `../output/`（开发时用）。
 
+想验证「同一份数据生成的文件是否真的一样」，固定 `DTSTAMP` 做可复现构建：
+
+```bash
+DTSTAMP=20261121T000000Z OUT_DIR=.. node generate-ics.cjs 2026 2027
+md5 calendar.ics    # 连跑两次，md5 应完全一致
+```
+
 ## 年更流程
 
 每年 11 月国务院发布次年安排后：
