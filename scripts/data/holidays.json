@@ -1,0 +1,46 @@
+{
+  "_readme": "法定节假日与调休补班数据。口径：国务院办公厅年度通知，逐年人工录入，绝不推算。新增年份只需追加一个 key。",
+  "2026": {
+    "source": "国务院办公厅关于2026年部分节假日安排的通知（2025年11月4日发布）",
+    "publishedAt": "2025-11-04",
+    "url": "https://www.gov.cn/govweb/yaowen/liebiao/202511/content_7047099.htm",
+    "holidays": [
+      { "name": "元旦",   "start": "2026-01-01", "end": "2026-01-03", "officialDays": 3 },
+      { "name": "春节",   "start": "2026-02-15", "end": "2026-02-23", "officialDays": 9 },
+      { "name": "清明节", "start": "2026-04-04", "end": "2026-04-06", "officialDays": 3 },
+      { "name": "劳动节", "start": "2026-05-01", "end": "2026-05-05", "officialDays": 5 },
+      { "name": "端午节", "start": "2026-06-19", "end": "2026-06-21", "officialDays": 3 },
+      { "name": "中秋节", "start": "2026-09-25", "end": "2026-09-27", "officialDays": 3 },
+      { "name": "国庆节", "start": "2026-10-01", "end": "2026-10-07", "officialDays": 7 }
+    ],
+    "workdays": [
+      { "date": "2026-01-04", "for": "元旦" },
+      { "date": "2026-02-14", "for": "春节" },
+      { "date": "2026-02-28", "for": "春节" },
+      { "date": "2026-05-09", "for": "劳动节" },
+      { "date": "2026-09-20", "for": "国庆节" },
+      { "date": "2026-10-10", "for": "国庆节" }
+    ]
+  },
+  "2027": {
+    "source": "国务院办公厅关于2027年部分节假日安排的通知（国办发明电〔2026〕10号）",
+    "publishedAt": "2026-11-05",
+    "url": "https://www.gov.cn/zhengce/content/202611/content_7085101.htm",
+    "holidays": [
+      { "name": "元旦",   "start": "2027-01-01", "end": "2027-01-03", "officialDays": 3 },
+      { "name": "春节",   "start": "2027-02-05", "end": "2027-02-13", "officialDays": 9 },
+      { "name": "清明节", "start": "2027-04-03", "end": "2027-04-05", "officialDays": 3 },
+      { "name": "劳动节", "start": "2027-05-01", "end": "2027-05-05", "officialDays": 5 },
+      { "name": "端午节", "start": "2027-06-09", "end": "2027-06-09", "officialDays": 1 },
+      { "name": "中秋节", "start": "2027-09-15", "end": "2027-09-15", "officialDays": 1 },
+      { "name": "国庆节", "start": "2027-10-01", "end": "2027-10-07", "officialDays": 7 }
+    ],
+    "workdays": [
+      { "date": "2027-01-31", "for": "春节" },
+      { "date": "2027-02-14", "for": "春节" },
+      { "date": "2027-05-08", "for": "劳动节" },
+      { "date": "2027-09-26", "for": "国庆节" },
+      { "date": "2027-10-09", "for": "国庆节" }
+    ]
+  }
+}

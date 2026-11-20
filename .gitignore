@@ -1,0 +1,11 @@
+node_modules/
+.DS_Store
+*.log
+.idea/
+.vscode/
+
+# 生成过程中的中间产物，不入库
+*-数据核对表.md
+*-宜忌核对表.md
+calendar-*-*.ics
+yiji-*-*.ics

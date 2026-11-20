@@ -1,0 +1,37 @@
+name: 校验 RFC5545
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: scripts/package-lock.json
+
+      - name: 安装依赖
+        run: npm ci
+        working-directory: scripts
+
+      - name: 合并版（对外订阅地址）
+        run: |
+          node verify.cjs ../calendar.ics 20
+          node verify.cjs ../yiji.ics 18
+        working-directory: scripts
+
+      - name: 单年版
+        run: |
+          node verify.cjs ../calendar-2026.ics 20
+          node verify.cjs ../yiji-2026.ics 18
+          node verify.cjs ../calendar-2027.ics 20
+          node verify.cjs ../yiji-2027.ics 18
+        working-directory: scripts

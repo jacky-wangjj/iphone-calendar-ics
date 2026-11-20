@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>iPhone 日历增强包 · 订阅</title>
+<style>
+  :root {
+    --bg: #f5f5f7;
+    --card: #ffffff;
+    --ink: #1d1d1f;
+    --ink2: #6e6e73;
+    --line: #e5e5ea;
+    --red: #d70015;
+    --green: #1d7a3a;
+    --amber: #9a6a00;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: -apple-system, "SF Pro Text", "PingFang SC", system-ui, sans-serif;
+    line-height: 1.6;
+    padding: 24px 16px 64px;
+  }
+  .wrap { max-width: 680px; margin: 0 auto; }
+  h1 { font-size: 26px; line-height: 1.3; margin: 0 0 6px; letter-spacing: -0.02em; }
+  .sub { color: var(--ink2); font-size: 14px; margin: 0 0 18px; }
+  .seg {
+    display: flex; gap: 4px; background: #ececef; border-radius: 10px;
+    padding: 3px; margin-bottom: 16px;
+  }
+  .seg button {
+    flex: 1; border: 0; background: transparent; color: var(--ink2);
+    font: inherit; font-size: 14px; font-weight: 600; padding: 8px 4px;
+    border-radius: 8px; cursor: pointer;
+  }
+  .seg button[aria-selected="true"] { background: #fff; color: var(--ink); box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+  .card {
+    background: var(--card); border-radius: 14px; padding: 20px;
+    margin-bottom: 14px; border: 1px solid var(--line);
+  }
+  .card h2 { font-size: 16px; margin: 0 0 4px; display: flex; align-items: center; gap: 8px; }
+  .meta { color: var(--ink2); font-size: 13px; margin: 0 0 14px; }
+  .tag {
+    display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 7px;
+    border-radius: 5px; background: #f0f0f2; color: var(--ink2); vertical-align: 1px;
+  }
+  .tag.main { background: #ffe9eb; color: var(--red); }
+  .tag.opt { background: #eef0f3; color: #445; }
+  .btn {
+    display: block; width: 100%; text-align: center; text-decoration: none;
+    background: var(--ink); color: #fff; font-size: 15px; font-weight: 600;
+    padding: 13px; border-radius: 10px; margin-bottom: 8px; border: 0; cursor: pointer;
+  }
+  .btn.ghost { background: #fff; color: var(--ink); border: 1px solid var(--line); }
+  .btn:active { opacity: .8; }
+  code {
+    font: 12px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+    background: #f0f0f2; padding: 2px 5px; border-radius: 4px; word-break: break-all;
+  }
+  .url { display: block; margin: 8px 0 12px; }
+  ol, ul { margin: 0; padding-left: 20px; font-size: 14px; }
+  li { margin-bottom: 5px; }
+  .check { border-collapse: collapse; width: 100%; font-size: 13px; margin-top: 6px; }
+  .check td { padding: 7px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .check td:first-child { color: var(--ink2); width: 40%; }
+  .ok { color: var(--green); font-weight: 600; }
+  .bad { color: var(--red); font-weight: 600; }
+  .warn { color: var(--amber); font-weight: 600; }
+  .note {
+    font-size: 13px; color: var(--ink2); background: #fffbe6;
+    border: 1px solid #ffe58f; border-radius: 10px; padding: 12px 14px; margin-top: 4px;
+  }
+  .foot { color: var(--ink2); font-size: 12px; text-align: center; margin-top: 28px; line-height: 1.8; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>iPhone 日历增强包</h1>
+  <p class="sub">把节假日、调休、节气、农历装进 iPhone 原生日历 · 不装 App · 订一次长期有效</p>
+
+  <div class="seg" role="tablist" id="seg">
+    <button role="tab" data-key="span" aria-selected="true">2026–2027</button>
+    <button role="tab" data-key="2026" aria-selected="false">2026 单年</button>
+    <button role="tab" data-key="2027" aria-selected="false">2027 单年</button>
+  </div>
+
+  <div class="card">
+    <h2>主层 <span class="tag main">推荐</span></h2>
+    <p class="meta" id="meta-main">法定节假日与调休 · 二十四节气 · 传统节日 · 仅关键日显示</p>
+    <a class="btn" id="btn-main" href="#">订阅主层日历</a>
+    <a class="btn ghost" id="raw-main" href="#" onclick="copyLink('main', this); return false;">复制订阅链接</a>
+    <code class="url" id="url-main"></code>
+  </div>
+
+  <div class="card">
+    <h2>宜忌层 <span class="tag opt">可选</span></h2>
+    <p class="meta" id="meta-yiji">每日一条农历 + 黄历宜忌。信息量大，想要黄历的再叠这一层，不想要就别订</p>
+    <a class="btn" id="btn-yiji" href="#">订阅宜忌日历</a>
+    <a class="btn ghost" id="raw-yiji" href="#" onclick="copyLink('yiji', this); return false;">复制订阅链接</a>
+    <code class="url" id="url-yiji"></code>
+  </div>
+
+  <div class="card">
+    <h2>地址自检 <span class="tag" id="probe-year">2026</span></h2>
+    <p class="meta">日历客户端只认 <code>text/calendar</code>，这项不对就订不上。下面是本页实时探测结果</p>
+    <table class="check">
+      <tbody id="probe">
+        <tr><td>探测中…</td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>订哪个</h2>
+    <ul>
+      <li><b>2026–2027（推荐）</b>：一个日历装两年共 121 条，地址 <code>/calendar.ics</code> 永久固定。年更时我们覆盖内容，你什么都不用做</li>
+      <li><b>2026 单年</b>：33 天法定假期、6 天补班，主层 62 条。适合只想看今年、或用备用机回看</li>
+      <li><b>2027 单年</b>：29 天法定假期、5 天补班，主层 59 条。适合只关心明年</li>
+      <li>三个是<b>独立日历</b>，可以都订；但别同时订「合并」和「单年」，否则同一天会出现两条</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>iPhone 上怎么订</h2>
+    <ol>
+      <li><b>用 Safari 打开本页</b>，点上面的订阅按钮。微信里打不开订阅弹窗</li>
+      <li>弹出「订阅…日历？」→ 点<b>订阅</b></li>
+      <li>事件若没立刻出现，去 设置 → 日历 → 账户 → 获取新数据 手动刷新一次</li>
+    </ol>
+    <p class="meta" style="margin:12px 0 4px">按钮不管用就走手动：</p>
+    <ol>
+      <li>复制上面的订阅链接</li>
+      <li>设置 → 日历 → 账户 → 添加账户 → 其他 → 添加已订阅的日历</li>
+      <li>粘贴链接 → 下一步 → 存储</li>
+    </ol>
+    <div class="note">
+      在微信里点开本页的，先点右上角「…」→ 在默认浏览器打开；或者直接复制链接走上面的手动路径。
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>顺带开启系统农历</h2>
+    <p class="meta">农历不靠订阅事件承载，交给系统原生显示，零事件零耗电</p>
+    <ol>
+      <li>设置 → 日历 → 其他历法 → 农历</li>
+    </ol>
+  </div>
+
+  <p class="foot">
+    黄历宜忌依据《钦定协纪辨方书》底本推算，属民俗参考，不构成任何决策依据。<br>
+    订阅地址固定，每年 11 月更新次年数据，无需重新订阅。
+  </p>
+</div>
+
+<script>
+(function () {
+  const base = location.origin;
+  // 托管方可能要求带上分享码（?sharecode=xxx），必须原样带到订阅链接里，
+  // 否则日历客户端请求会 403。正式域名下 location.search 为空，这里自然退化为不带参数。
+  const qs = location.search || '';
+
+  // 三个视图：合并（推荐，固定地址）与两个单年版
+  const VIEWS = {
+    span: {
+      main: 'calendar.ics',
+      yiji: 'yiji.ics',
+      mainCount: 121,
+      yijiCount: 730,
+      label: '2026–2027',
+      meta: '两年共 121 条：法定节假日与调休 · 二十四节气 · 传统节日，仅关键日显示。地址永久固定，年更我们覆盖内容',
+    },
+    2026: {
+      main: 'calendar-2026.ics',
+      yiji: 'yiji-2026.ics',
+      mainCount: 62,
+      yijiCount: 365,
+      label: '2026',
+      meta: '2026 单年 62 条：33 天法定假期 · 6 天补班 · 节气与传统节日',
+    },
+    2027: {
+      main: 'calendar-2027.ics',
+      yiji: 'yiji-2027.ics',
+      mainCount: 59,
+      yijiCount: 365,
+      label: '2027',
+      meta: '2027 单年 59 条：29 天法定假期 · 5 天补班 · 节气与传统节日',
+    },
+  };
+
+  let current = 'span';
+
+  function setLink(file) {
+    return {
+      httpUrl: base + '/' + file + qs,
+      webcalUrl: 'webcal://' + location.host + '/' + file + qs,
+    };
+  }
+
+  function render(key) {
+    current = key;
+    const cfg = VIEWS[key];
+    const main = setLink(cfg.main);
+    const yiji = setLink(cfg.yiji);
+
+    document.getElementById('btn-main').href = main.webcalUrl;
+    document.getElementById('btn-yiji').href = yiji.webcalUrl;
+    document.getElementById('url-main').textContent = main.httpUrl;
+    document.getElementById('url-yiji').textContent = yiji.httpUrl;
+    document.getElementById('meta-main').textContent = cfg.meta;
+    document.getElementById('meta-yiji').textContent =
+      '每日一条农历 + 黄历宜忌，本视图 ' + cfg.yijiCount + ' 条。信息量大，想要黄历的再叠这一层，不想要就别订';
+    document.getElementById('probe-year').textContent = cfg.label;
+
+    for (const b of document.querySelectorAll('#seg button')) {
+      b.setAttribute('aria-selected', String(b.dataset.key === key));
+    }
+    runProbe(cfg);
+  }
+
+  document.getElementById('seg').addEventListener('click', (e) => {
+    const b = e.target.closest('button[data-key]');
+    if (b) render(b.dataset.key);
+  });
+
+  window.copyLink = function (kind, el) {
+    const cfg = VIEWS[current];
+    const text = base + '/' + (kind === 'main' ? cfg.main : cfg.yiji) + qs;
+    const done = (ok) => {
+      const old = el.textContent;
+      el.textContent = ok ? '已复制' : '复制失败，请长按上方链接';
+      setTimeout(() => { el.textContent = old; }, 1600);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(() => done(true), () => done(false));
+    } else {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      let ok = false;
+      try { ok = document.execCommand('copy'); } catch (e) {}
+      document.body.removeChild(ta);
+      done(ok);
+    }
+  };
+
+  // 自检：拉两个文件，检查 Content-Type、首行、事件数
+  async function probe(file, label, limit, expect) {
+    const rows = [];
+    try {
+      const r = await fetch(base + '/' + file + qs, { cache: 'no-store' });
+      rows.push([label + ' HTTP 状态', r.status === 200 ? ['ok', r.status + ' OK'] : ['bad', String(r.status)]]);
+      const ct = r.headers.get('content-type') || '(无)';
+      const ctOk = /text\/calendar/i.test(ct);
+      rows.push([label + ' Content-Type', ctOk ? ['ok', ct] : ['bad', ct + ' ← 应为 text/calendar']]);
+      const text = await r.text();
+      const first = (text.split(/\r?\n/)[0] || '').trim();
+      rows.push([label + ' 首行', first === 'BEGIN:VCALENDAR' ? ['ok', first] : ['bad', first || '(空)']]);
+      const n = (text.match(/BEGIN:VEVENT/g) || []).length;
+      const nOk = n > 0 && n <= limit;
+      const tail = expect ? '，预期 ' + expect : '';
+      rows.push([label + ' 事件数', nOk ? ['ok', n + ' 条' + tail] : ['warn', n + ' 条（预期 1~' + limit + '）']]);
+      rows.push([label + ' 大小', ['ok', (text.length / 1024).toFixed(1) + ' KB']]);
+    } catch (e) {
+      rows.push([label, ['bad', '请求失败：' + e.message]]);
+    }
+    return rows;
+  }
+
+  async function runProbe(cfg) {
+    const tbody = document.getElementById('probe');
+    tbody.innerHTML = '<tr><td>探测中…</td><td></td></tr>';
+    const rows = [
+      ...(await probe(cfg.main, '主层', 400, cfg.mainCount)),
+      ...(await probe(cfg.yiji, '宜忌层', 800, cfg.yijiCount)),
+    ];
+    tbody.innerHTML = rows.map(([k, v]) =>
+      '<tr><td>' + k + '</td><td class="' + v[0] + '">' + v[1] + '</td></tr>'
+    ).join('');
+  }
+
+  render('span');
+})();
+</script>
+</body>
+</html>

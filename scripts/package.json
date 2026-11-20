@@ -1,0 +1,16 @@
+{
+  "name": "calendar-enhance-ics",
+  "version": "1.0.0",
+  "private": true,
+  "description": "iPhone 日历增强包 · .ics 生成与校验",
+  "license": "MIT",
+  "scripts": {
+    "build": "OUT_DIR=.. node generate-ics.cjs 2026 2027 && OUT_DIR=.. node generate-yiji.cjs 2026 2027",
+    "build:2026": "OUT_DIR=.. node generate-ics.cjs 2026 && OUT_DIR=.. node generate-yiji.cjs 2026",
+    "build:2027": "OUT_DIR=.. node generate-ics.cjs 2027 && OUT_DIR=.. node generate-yiji.cjs 2027",
+    "verify": "node verify.cjs ../calendar.ics 20 && node verify.cjs ../yiji.ics 18"
+  },
+  "dependencies": {
+    "lunar-javascript": "^1.7.8"
+  }
+}

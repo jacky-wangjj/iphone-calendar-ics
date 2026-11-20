@@ -1,0 +1,120 @@
+name: 生成并发布日历
+
+on:
+  workflow_dispatch:
+    inputs:
+      years:
+        description: 要生成的年份，空格分隔；留空则自动取「当年 + 次年」
+        required: false
+        default: ''
+  schedule:
+    # 每年 11 月 1 日 02:00 UTC（北京时间 10:00）跑一次年度体检：
+    # 检查次年放假安排是否已录入，未录入则失败，用 Actions 的失败通知提醒你。
+    - cron: '0 2 1 11 *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-calendar
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      INPUT_YEARS: ${{ inputs.years }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: scripts/package-lock.json
+
+      - name: 安装依赖
+        run: npm ci
+        working-directory: scripts
+
+      - name: 决定生成年份
+        id: years
+        run: |
+          if [ -n "$INPUT_YEARS" ]; then
+            YEARS="$INPUT_YEARS"
+          else
+            Y=$(date -u +%Y)
+            YEARS="$Y $((Y + 1))"
+          fi
+          COUNT=$(echo "$YEARS" | wc -w | tr -d ' ')
+          if [ "$COUNT" -lt 2 ]; then
+            echo "::warning::只传了一个年份，本次不会更新合并版 calendar.ics / yiji.ics（对外订阅地址）"
+          fi
+          echo "years=$YEARS" >> "$GITHUB_OUTPUT"
+          echo "本次生成：$YEARS"
+
+      - name: 年度体检（仅定时任务）
+        if: github.event_name == 'schedule'
+        run: |
+          Y=$(date -u +%Y)
+          NEXT=$((Y + 1))
+          if node -e "const d=require('./scripts/data/holidays.json');process.exit(d['$NEXT'] ? 0 : 1)"; then
+            echo "✓ $NEXT 年放假安排已录入"
+          else
+            echo "::error::$NEXT 年放假安排尚未录入。请到 gov.cn 查到通知后，补进 scripts/data/holidays.json，再手动触发本工作流。"
+            exit 1
+          fi
+
+      - name: 生成 .ics
+        run: |
+          OUT_DIR=.. node generate-ics.cjs ${{ steps.years.outputs.years }}
+          OUT_DIR=.. node generate-yiji.cjs ${{ steps.years.outputs.years }}
+        working-directory: scripts
+
+      - name: 校验 RFC5545
+        run: |
+          node verify.cjs ../calendar.ics 20
+          node verify.cjs ../yiji.ics 18
+          node verify.cjs ../calendar-2026.ics 20
+          node verify.cjs ../yiji-2026.ics 18
+          node verify.cjs ../calendar-2027.ics 20
+          node verify.cjs ../yiji-2027.ics 18
+        working-directory: scripts
+
+      - name: 上传核对表
+        uses: actions/upload-artifact@v4
+        with:
+          name: 数据核对表
+          path: |
+            *-数据核对表.md
+            *-宜忌核对表.md
+          if-no-files-found: ignore
+
+      - name: 提交变更
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          if git diff --quiet && git diff --cached --quiet; then
+            echo "内容无变化，无需提交"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git add -A
+          git commit -m "chore: 重新生成日历 ${{ steps.years.outputs.years }} [skip ci]"
+          git push
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+        id: commit
+
+      - name: 写入摘要
+        if: always()
+        run: |
+          {
+            echo "### 订阅地址"
+            echo ""
+            echo "| 层 | GitHub Pages | jsDelivr 镜像 |"
+            echo "|---|---|---|"
+            echo "| 主层 | \`https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/calendar.ics\` | \`https://cdn.jsdelivr.net/gh/${{ github.repository }}@main/calendar.ics\` |"
+            echo "| 宜忌层 | \`https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/yiji.ics\` | \`https://cdn.jsdelivr.net/gh/${{ github.repository }}@main/yiji.ics\` |"
+            echo ""
+            echo "改动文件：${{ steps.commit.outputs.changed }}"
+          } >> "$GITHUB_STEP_SUMMARY"
