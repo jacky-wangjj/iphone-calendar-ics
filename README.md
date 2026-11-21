@@ -23,7 +23,7 @@
 
 - 在线订阅页：`https://jacky-wangjj.github.io/iphone-calendar-ics/`
 - 图文订阅指南：`https://jacky-wangjj.github.io/iphone-calendar-ics/guide.html`
-- 离线包说明页：`https://jacky-wangjj.github.io/iphone-calendar-ics/offline-guide.html`
+- 离线包：`https://jacky-wangjj.github.io/iphone-calendar-ics/offline-guide.html`（单文件自包含，6 个 .ics 打包在内，可直接转发，点按钮即可保存）
 
 地址不带任何分享码，可整条复制。
 
