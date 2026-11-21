@@ -149,6 +149,12 @@
     </ol>
   </div>
 
+  <div class="card">
+    <h2>完整订阅指南</h2>
+    <p class="meta">外部订阅源清单、iPhone 分步骤图解、离线包导入方法</p>
+    <a class="btn ghost" href="guide.html">打开图文订阅指南 →</a>
+  </div>
+
   <p class="foot">
     黄历宜忌依据《钦定协纪辨方书》底本推算，属民俗参考，不构成任何决策依据。<br>
     订阅地址固定，每年 11 月更新次年数据，无需重新订阅。
@@ -158,8 +164,8 @@
 <script>
 (function () {
   const base = location.origin;
-  // 托管方可能要求带上分享码（?sharecode=xxx），必须原样带到订阅链接里，
-  // 否则日历客户端请求会 403。正式域名下 location.search 为空，这里自然退化为不带参数。
+  // 订阅链接直接用当前域名。正式域名（github.io）下 location.search 为空，
+  // 若在本地测试站预览带了查询参数，则原样保留，不影响功能。
   const qs = location.search || '';
 
   // 三个视图：合并（推荐，固定地址）与两个单年版

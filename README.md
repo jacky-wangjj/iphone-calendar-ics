@@ -7,12 +7,25 @@
 
 ## 订阅地址
 
-把 `<owner>` 换成你的 GitHub 用户名，`<repo>` 换成仓库名。
+**主推（jsDelivr，国内可达性更好）**：
 
-| 层 | GitHub Pages | jsDelivr 镜像 |
-|---|---|---|
-| 主层（推荐） | `https://<owner>.github.io/<repo>/calendar.ics` | `https://cdn.jsdelivr.net/gh/<owner>/<repo>@main/calendar.ics` |
-| 宜忌层（可选） | `https://<owner>.github.io/<repo>/yiji.ics` | `https://cdn.jsdelivr.net/gh/<owner>/<repo>@main/yiji.ics` |
+| 层 | 订阅地址 |
+|---|---|
+| 主层（推荐） | `https://cdn.jsdelivr.net/gh/jacky-wangjj/iphone-calendar-ics@main/calendar.ics` |
+| 宜忌层（可选） | `https://cdn.jsdelivr.net/gh/jacky-wangjj/iphone-calendar-ics@main/yiji.ics` |
+
+备用（GitHub Pages，jsDelivr 连不上时再换）：
+
+| 层 | 订阅地址 |
+|---|---|
+| 主层 | `https://jacky-wangjj.github.io/iphone-calendar-ics/calendar.ics` |
+| 宜忌层 | `https://jacky-wangjj.github.io/iphone-calendar-ics/yiji.ics` |
+
+- 在线订阅页：`https://jacky-wangjj.github.io/iphone-calendar-ics/`
+- 图文订阅指南：`https://jacky-wangjj.github.io/iphone-calendar-ics/guide.html`
+- 离线包说明页：`https://jacky-wangjj.github.io/iphone-calendar-ics/offline-guide.html`
+
+地址不带任何分享码，可整条复制。
 
 现在的 `calendar.ics` 装 **2026–2027 两年共 121 条**，`yiji.ics` 装 730 条（每天一条）。
 每年 11 月重新生成后覆盖同名文件，**订阅地址永不变化**，用户订一次就够了。

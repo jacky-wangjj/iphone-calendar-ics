@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>订阅指南 · iPhone 日历增强包</title>
+<style>
+  :root {
+    --bg: #f5f5f7;
+    --card: #ffffff;
+    --ink: #1d1d1f;
+    --ink2: #6e6e73;
+    --ink3: #86868b;
+    --line: #e5e5ea;
+    --red: #d70015;
+    --green: #1d7a3a;
+    --amber: #9a6a00;
+    --blue: #0071e3;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: -apple-system, "SF Pro Text", "PingFang SC", system-ui, sans-serif;
+    line-height: 1.65;
+    padding: 28px 16px 72px;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; }
+
+  .hero { margin-bottom: 26px; }
+  .hero h1 { font-size: 28px; line-height: 1.25; margin: 0 0 8px; letter-spacing: -0.02em; }
+  .hero p { color: var(--ink2); font-size: 15px; margin: 0; }
+
+  h2.sec {
+    font-size: 19px; margin: 34px 0 4px; letter-spacing: -0.01em;
+    display: flex; align-items: baseline; gap: 9px;
+  }
+  h2.sec .num {
+    font-size: 12px; font-weight: 600; color: #fff; background: var(--ink);
+    width: 20px; height: 20px; border-radius: 6px; display: inline-flex;
+    align-items: center; justify-content: center; flex: 0 0 auto;
+  }
+  .lead { color: var(--ink2); font-size: 14px; margin: 8px 0 14px; }
+
+  .card {
+    background: var(--card); border-radius: 14px; padding: 20px;
+    margin-bottom: 14px; border: 1px solid var(--line);
+  }
+  .card h3 { font-size: 16px; margin: 0 0 4px; }
+  .card .meta { color: var(--ink2); font-size: 13px; margin: 0 0 14px; }
+
+  .tag {
+    display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 7px;
+    border-radius: 5px; background: #f0f0f2; color: var(--ink2); vertical-align: 1px;
+  }
+  .tag.mine { background: #ffe9eb; color: var(--red); }
+  .tag.ok { background: #e3f5e9; color: var(--green); }
+  .tag.warn { background: #fff4d6; color: var(--amber); }
+
+  .btn {
+    display: block; width: 100%; text-align: center; text-decoration: none;
+    background: var(--ink); color: #fff; font-size: 15px; font-weight: 600;
+    padding: 13px; border-radius: 10px; margin-bottom: 8px; border: 0; cursor: pointer;
+  }
+  .btn.ghost { background: #fff; color: var(--ink); border: 1px solid var(--line); }
+  .btn:active { opacity: .8; }
+
+  code {
+    font: 12px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+    background: #f0f0f2; padding: 2px 5px; border-radius: 4px; word-break: break-all;
+  }
+  .url {
+    display: block; margin: 8px 0 10px; font: 12px/1.5 ui-monospace, Menlo, monospace;
+    background: #f7f7f9; border: 1px solid var(--line); border-radius: 8px;
+    padding: 10px 12px; word-break: break-all; color: #333;
+  }
+
+  table.t { border-collapse: collapse; width: 100%; font-size: 13px; }
+  table.t th {
+    text-align: left; font-weight: 600; color: var(--ink2); font-size: 12px;
+    padding: 8px 8px 8px 0; border-bottom: 1px solid var(--line); white-space: nowrap;
+  }
+  table.t td { padding: 9px 8px 9px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  table.t tr:last-child td { border-bottom: 0; }
+
+  .note {
+    font-size: 13px; color: #6b5300; background: #fffbe6;
+    border: 1px solid #ffe58f; border-radius: 10px; padding: 12px 14px; margin-top: 10px;
+  }
+  .danger { background: #fff1f2; border-color: #ffc9cf; color: #8e1220; }
+  .tip { background: #f0f7ff; border-color: #cfe4ff; color: #1a4887; }
+
+  /* ---------- 手机示意图 ---------- */
+  .shots {
+    display: flex; gap: 16px; overflow-x: auto; padding: 6px 2px 18px;
+    -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory;
+  }
+  .shot { flex: 0 0 auto; width: 196px; scroll-snap-align: start; }
+  .shot .cap {
+    font-size: 12px; color: var(--ink2); margin-top: 9px; line-height: 1.5;
+  }
+  .shot .cap b { color: var(--ink); font-weight: 600; }
+  .shot .stepno {
+    display: inline-block; font-size: 11px; font-weight: 600; color: #fff;
+    background: var(--blue); border-radius: 10px; padding: 0 7px; margin-right: 5px;
+  }
+
+  .phone {
+    width: 196px; height: 414px; border-radius: 30px; background: #1d1d1f;
+    padding: 8px; position: relative; box-shadow: 0 4px 14px rgba(0,0,0,.10);
+  }
+  .phone .scr {
+    width: 100%; height: 100%; border-radius: 23px; background: #f2f2f7;
+    overflow: hidden; position: relative; display: flex; flex-direction: column;
+  }
+  .phone .notch {
+    position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
+    width: 66px; height: 17px; background: #1d1d1f; border-radius: 0 0 11px 11px; z-index: 5;
+  }
+  .sbar {
+    height: 26px; display: flex; align-items: center; justify-content: space-between;
+    padding: 5px 14px 0; font-size: 10px; font-weight: 600; color: #000; flex: 0 0 auto;
+  }
+  .sbar .batt { width: 17px; height: 8px; border: 1px solid #000; border-radius: 2px; position: relative; }
+  .sbar .batt::after {
+    content: ''; position: absolute; inset: 1px; background: #000; border-radius: 1px; width: 11px;
+  }
+  .nav {
+    padding: 2px 12px 7px; font-size: 13px; font-weight: 600; text-align: center;
+    position: relative; flex: 0 0 auto;
+  }
+  .nav .back { position: absolute; left: 12px; top: 1px; color: var(--blue); font-size: 15px; font-weight: 500; }
+  .nav .big { text-align: left; font-size: 20px; font-weight: 700; padding-top: 4px; }
+
+  .slist { background: #fff; margin: 0 10px; border-radius: 10px; overflow: hidden; flex: 0 0 auto; }
+  .srow {
+    display: flex; align-items: center; gap: 7px; padding: 8px 10px;
+    font-size: 11.5px; border-bottom: 0.5px solid #d8d8dc; position: relative;
+  }
+  .srow:last-child { border-bottom: 0; }
+  .srow .ico {
+    width: 18px; height: 18px; border-radius: 4.5px; flex: 0 0 auto;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px; color: #fff; font-weight: 700;
+  }
+  .srow .chev { margin-left: auto; color: #c4c4c8; font-size: 12px; }
+  .srow.hl { background: #dbeafe; }
+  .srow.hl::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2.5px; background: var(--blue);
+  }
+  .srow .sub { display: block; font-size: 9.5px; color: var(--ink3); font-weight: 400; }
+
+  .sheet {
+    position: absolute; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,.98);
+    border-radius: 14px 14px 0 0; padding: 14px 14px 16px; text-align: center;
+    box-shadow: 0 -2px 12px rgba(0,0,0,.10); z-index: 4;
+  }
+  .sheet .st { font-size: 11.5px; font-weight: 600; line-height: 1.5; margin-bottom: 3px; }
+  .sheet .sd { font-size: 10px; color: var(--ink3); line-height: 1.5; margin-bottom: 10px; }
+  .sheet .btns { display: flex; gap: 6px; }
+  .sheet .btns i {
+    flex: 1; font-style: normal; font-size: 11px; padding: 5px 0; border-radius: 6px;
+    background: #f0f0f2; color: var(--ink);
+  }
+  .sheet .btns i.pri { background: var(--blue); color: #fff; font-weight: 600; }
+  .dim { position: absolute; inset: 0; background: rgba(0,0,0,.35); z-index: 3; }
+
+  .inputbox {
+    margin: 8px 10px; background: #fff; border-radius: 8px; padding: 7px 9px;
+    font: 9px/1.5 ui-monospace, Menlo, monospace; color: #333; word-break: break-all;
+    border: 1.5px solid var(--blue);
+  }
+  .kbd { text-align: center; font-size: 9px; color: var(--ink3); margin-top: 5px; }
+
+  /* 月视图 */
+  .mhead { display: flex; justify-content: space-between; padding: 4px 12px 2px; font-size: 11px; font-weight: 600; }
+  .mhead .y { color: var(--ink2); font-weight: 400; }
+  .grid7 { display: grid; grid-template-columns: repeat(7,1fr); gap: 0; padding: 0 8px; }
+  .grid7 .wd { text-align: center; font-size: 8.5px; color: var(--ink3); padding-bottom: 3px; }
+  .grid7 .d {
+    text-align: center; font-size: 9.5px; height: 34px; padding-top: 2px;
+    border-bottom: 0.5px solid #e8e8ea; line-height: 1.25;
+  }
+  .grid7 .d.off { color: #c4c4c8; }
+  .grid7 .d .ev {
+    font-size: 6.5px; line-height: 1.2; border-radius: 2px; padding: 0 1px;
+    background: #ffe0e3; color: #a01223; overflow: hidden; white-space: nowrap;
+    text-overflow: ellipsis; text-align: left;
+  }
+  .grid7 .d .ev.jq { background: #e2f0ff; color: #14538f; }
+
+  .lst { padding: 0 10px; }
+  .li { display: flex; align-items: center; gap: 7px; padding: 4.5px 0; border-bottom: 0.5px solid #e8e8ea; }
+  .li:last-child { border-bottom: 0; }
+  .li .dt { width: 24px; text-align: center; flex: 0 0 auto; }
+  .li .dt b { display: block; font-size: 13px; font-weight: 600; line-height: 1.1; }
+  .li .dt span { font-size: 6.5px; color: var(--ink3); }
+  .li .evt {
+    font-size: 9.5px; color: #a01223; background: #ffe0e3; border-radius: 3px;
+    padding: 1.5px 5px; flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+  }
+  .li .evt.work { color: #8a4b00; background: #ffe9d6; }
+
+  .cc { border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; background: #fff; }
+  .cc .top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 2px; }
+  .cc .top b { font-size: 14.5px; }
+  .cc .desc { font-size: 13px; color: var(--ink2); margin: 4px 0 8px; }
+  .cc .facts { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12px; color: var(--ink2); }
+  .cc .facts span b { color: var(--ink); font-weight: 600; }
+
+  .foot { color: var(--ink3); font-size: 12px; text-align: center; margin-top: 34px; line-height: 1.9; }
+  a { color: var(--blue); }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <h1>订阅指南</h1>
+    <p>不装 App、不占内存。<strong>一条订阅链接</strong>自动更新，或<strong>一个离线包</strong>直接导入 —— iPhone 原生日历里就有节假日、节气、农历和黄历宜忌。</p>
+  </div>
+
+  <!-- 1 内容 -->
+  <h2 class="sec"><span class="num">1</span>先说清这张日历里有什么</h2>
+  <p class="lead">两层日历互相独立，可只订主层，也可叠加宜忌层。合起来覆盖 2026–2027 两年，共 121 + 730 条事件。</p>
+
+  <div class="card">
+    <h3>主层 · 中国节假日与节气</h3>
+    <p class="meta">121 条 · 24 KB · 只标关键日，不制造噪音</p>
+    <table class="t">
+      <tr><th style="width:96px">内容</th><th>长什么样</th></tr>
+      <tr><td>法定节假日</td><td><code>春节·休 2/9</code> · <code>国庆节假期·休 3/7</code><br><span style="color:var(--ink2);font-size:12px">末尾的 2/9 是假期进度，一眼看出还剩几天</span></td></tr>
+      <tr><td>调休补班</td><td><code>国庆节·班</code> · <code>春节·班</code></td></tr>
+      <tr><td>二十四节气</td><td><code>立春</code> · <code>冬至</code> · <code>大雪</code></td></tr>
+      <tr><td>传统节日</td><td><code>除夕·休 1/9</code> · <code>腊八节(腊月初八)</code> · <code>重阳节(九月初九)</code></td></tr>
+    </table>
+    <div class="note tip" style="margin-top:14px">
+      <b>为什么除夕单独标？</b>除夕落在春节假期第一天，很多日历会把它并成「春节假期·休」。这里保留「除夕」这个名字，因为对多数人来说除夕才是真正的年。
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>宜忌层 · 黄历宜忌</h3>
+    <p class="meta">730 条 · 163 KB · 每天一条，独立订阅，随时可退</p>
+    <table class="t">
+      <tr><th style="width:96px">日子类型</th><th>长什么样</th></tr>
+      <tr><td>普通日</td><td><code>冬月初三 · 宜开市 忌动土</code></td></tr>
+      <tr><td>节日 / 节气日</td><td><code>小寒(冬月十七) · 宜开市 忌修造</code></td></tr>
+      <tr><td>诸事不宜</td><td><code>立春(腊月廿八) · 诸事不宜</code></td></tr>
+    </table>
+    <div class="note" style="margin-top:14px">
+      依据《钦定协纪辨方书》底本口径推算，属民俗参考，不构成任何决策依据。宜忌各只取 1 项、整条标题控制在 18 字内 —— 这个层最容易做成一屏塞满几十个词，那样在手机上根本读不了。
+    </div>
+  </div>
+
+  <!-- 2 订阅源 -->
+  <h2 class="sec"><span class="num">2</span>可以用哪些订阅源</h2>
+  <p class="lead">下列地址均于 2026-11-21 实测：HTTP 200、<code>Content-Type: text/calendar</code>、能正常解析，各连续请求 3 次全部成功。先看外部源，再看本项目的两条链接。</p>
+
+  <h3 style="font-size:15px;margin:20px 0 10px">外部源：各自强在一处，按需选用</h3>
+  <p class="lead" style="margin-bottom:12px">都不用注册，地址整条复制即可。</p>
+
+  <div class="cc">
+    <div class="top"><b>香港 1823 官方</b><span class="tag ok">3/3 成功 · 0.30s</span></div>
+    <div class="desc">香港公众假期，含佛诞、重阳、复活节。全场唯一的政府直供，也是最快的；缺点只有一个：只有香港。</div>
+    <span class="url">https://www.1823.gov.hk/common/ical/sc.ics</span>
+    <div class="facts"><span>51 条</span><span>9 KB</span><span>2025–2027</span><span>另有 <b>tc.ics</b> 繁体 / <b>en.ics</b> 英文</span></div>
+  </div>
+
+  <div class="cc">
+    <div class="top"><b>lanceliao</b><span class="tag ok">3/3 成功 · 1.04s</span></div>
+    <div class="desc">内地法定节假日 + 调休 + 补班，逐日展开，标题自带「第 1 天/共 9 天」。没有节气、农历和宜忌。</div>
+    <span class="url">https://cdn.jsdelivr.net/gh/lanceliao/china-holiday-calender@master/holidayCal.ics</span>
+    <div class="facts"><span>176 条</span><span>92 KB</span><span>2022–2027</span><span>仅放假 <b>holidayCal-HO.ics</b> / 仅补班 <b>holidayCal-CO.ics</b></span></div>
+  </div>
+
+  <div class="cc">
+    <div class="top"><b>ChinaCalendar</b><span class="tag ok">3/3 成功 · 0.81s</span></div>
+    <div class="desc">品类最全，节气和农历各有独立分册。要农历或节气，从这两条开始。</div>
+    <span class="url">https://yangh9.github.io/ChinaCalendar/cal_lunar.ics</span>
+    <span class="url">https://yangh9.github.io/ChinaCalendar/cal_solarTerm.ics</span>
+    <div class="facts"><span>农历 730 条 / 308 KB</span><span>节气 48 条 / 15 KB</span><span>另有 <b>cal_holiday.ics</b>、<b>cal_festival.ics</b>、<b>calendar.ics</b> 合并版</span></div>
+  </div>
+
+  <div class="cc">
+    <div class="top"><b>zjlcy</b><span class="tag ok">3/3 成功 · 2.03s</span></div>
+    <div class="desc">黄历维度最细：宜忌之外还有时辰吉凶、彭祖百忌、吉神方位、今日胎神。标题是全量倾倒式，单条常超 150 字，手机上不好读。</div>
+    <span class="url">https://cdn.jsdelivr.net/gh/zjlcy/chinese_calender@master/almanac.ics</span>
+    <div class="facts"><span>宜忌 1095 条 / 345 KB</span><span>2025–2027</span><span>同目录还有 <b>good_bad_time.ics</b> 等五册</span></div>
+  </div>
+
+  <div class="cc">
+    <div class="top"><b>chinese-days</b><span class="tag ok">3/3 成功 · 1.03s</span></div>
+    <div class="desc">最轻的一条：只标假期首日与补班日，2027 全年只有 12 条。适合只想知道哪天放假的人。</div>
+    <span class="url">https://cdn.jsdelivr.net/npm/chinese-days/dist/holidays.ics</span>
+    <div class="facts"><span>38 条</span><span>22 KB</span><span>单年 <b>years/2027.ics</b> / 英文 <b>holidays.en.ics</b></span></div>
+  </div>
+
+  <div class="note" style="margin:4px 0 22px">
+    <b>别重复订。</b>lanceliao、ChinaCalendar 的 <code>cal_holiday.ics</code> 和 chinese-days 都在标法定节假日，同一天会出现多条重复事件。同类只留一个。
+  </div>
+
+  <h3 style="font-size:15px;margin:22px 0 4px">本项目：一条链接覆盖主层，宜忌层可选</h3>
+  <p class="lead" style="margin-bottom:12px">把「节假日 + 调休 + 节气 + 传统节日 + 宜忌」压进两条链接。地址永久固定，不带分享码，可整条复制。末尾附一条备用镜像，内容与主推完全一致。</p>
+
+  <div class="cc">
+    <div class="top"><b>主层（推荐首选）</b><span class="tag mine">本项目</span><span class="tag ok">已生效</span></div>
+    <div class="desc">法定节假日 + 调休补班 + 二十四节气 + 传统节日，2026–2027 合并，一次订阅。</div>
+    <span class="url">https://cdn.jsdelivr.net/gh/jacky-wangjj/iphone-calendar-ics@main/calendar.ics</span>
+    <div class="facts"><span>条数 <b>121</b></span><span>体积 <b>24 KB</b></span><span>覆盖 <b>2026–2027</b></span><span>刷新 <b>每天</b></span></div>
+  </div>
+
+  <div class="cc">
+    <div class="top"><b>宜忌层（可选叠加）</b><span class="tag mine">本项目</span><span class="tag ok">已生效</span></div>
+    <div class="desc">每日一条黄历宜忌，与主层互不影响，可单独退订。</div>
+    <span class="url">https://cdn.jsdelivr.net/gh/jacky-wangjj/iphone-calendar-ics@main/yiji.ics</span>
+    <div class="facts"><span>条数 <b>730</b></span><span>体积 <b>163 KB</b></span><span>覆盖 <b>2026–2027</b></span><span>刷新 <b>每天</b></span></div>
+  </div>
+
+  <h3 style="font-size:15px;margin:22px 0 4px">备用镜像：主链接连不上时再换</h3>
+  <p class="lead" style="margin-bottom:12px">同一份文件在 GitHub Pages 也有一份，内容完全一致。平时不用动；哪天 jsDelivr 连不上，把地址换成下面两条即可，不用重新建日历。</p>
+
+  <div class="cc">
+    <div class="top"><b>GitHub Pages 镜像</b><span class="tag ok">已生效</span><span class="tag">无需分享码</span></div>
+    <div class="desc">实测 <code>text/calendar</code>，121 / 730 条齐全。直连 GitHub 官方域名，晚高峰国内可能偏慢，作兜底用。</div>
+    <span class="url">https://jacky-wangjj.github.io/iphone-calendar-ics/calendar.ics</span>
+    <span class="url">https://jacky-wangjj.github.io/iphone-calendar-ics/yiji.ics</span>
+  </div>
+
+  <div class="note tip">
+    <b>换源不要重复订。</b>换镜像前先在「设置 → 日历 → 账户」里删掉旧订阅，再用新地址订阅一次；两条都留着会出现重复事件。
+  </div>
+
+  <!-- 3 离线包 -->
+  <h2 class="sec"><span class="num">3</span>离线包：不订阅也能用</h2>
+  <p class="lead">A 方案的第一条路。不需要服务器、不需要联网，拿到文件就能导入；代价是明年要重新导入一次。</p>
+
+  <div class="card">
+    <h3>日历增强包 · 离线版</h3>
+    <p class="meta">392 KB · 6 个 .ics · 覆盖 2026–2027 · 可微信直接转发</p>
+    <p style="font-size:13.5px;margin:0 0 12px">里面是 <code>calendar.ics</code>（主层 121 条）、<code>yiji.ics</code>（宜忌 730 条）和四个单年版。一般只用主层这一个文件。</p>
+    <a class="btn" href="offline-guide.html">打开离线包说明页</a>
+    <a class="btn ghost" href="offline-calendar.ics" download>只下载主层 calendar.ics（24 KB）</a>
+    <a class="btn ghost" href="offline-yiji.ics" download>下载宜忌层 yiji.ics（163 KB）</a>
+    <div class="note" style="margin-top:12px">
+      <b>导入 ≠ 订阅。</b>导入是把这份数据复制进日历，之后不会自动更新；订阅是给日历一个网址，让它自己定期去拉，一次配置长期有效。两者数据一样，但<b>不要同时用</b>，否则同一天会有两条重复事件。
+    </div>
+  </div>
+
+  <h3 style="font-size:15px;margin:22px 0 10px">iPhone 导入：三步</h3>
+  <div class="shots">
+
+    <div class="shot">
+      <div class="phone"><div class="notch"></div><div class="scr">
+        <div class="sbar"><span>9:41</span><span class="batt"></span></div>
+        <div class="nav"><span class="back">‹</span>日历</div>
+        <div class="slist" style="margin-top:4px">
+          <div class="srow"><span class="ico" style="background:#ff3b30">▣</span>iCloud<span class="chev">›</span></div>
+          <div class="srow"><span class="ico" style="background:#ff9500">◉</span>工作<span class="chev">›</span></div>
+          <div class="srow"><span class="ico" style="background:#34c759">◐</span>生日<span class="chev">›</span></div>
+          <div class="srow hl"><span style="flex:1;color:var(--blue)">添加日历</span><span class="chev" style="color:var(--blue)">›</span></div>
+        </div>
+        <div style="padding:8px 12px;font-size:9px;color:var(--ink3);line-height:1.6">新建一个专用日历，比如「中国节假日」。以后要整体清掉，删这个日历即可。</div>
+      </div></div>
+      <p class="cap"><span class="stepno">1</span><b>先建一个专用日历</b><br>和私人日程分开，日后好清理。</p>
+    </div>
+
+    <div class="shot">
+      <div class="phone"><div class="notch"></div><div class="scr">
+        <div class="sbar"><span>9:41</span><span class="batt"></span></div>
+        <div class="nav"><span class="back">‹</span>文件</div>
+        <div class="slist" style="margin-top:4px">
+          <div class="srow"><span class="ico" style="background:#d70015">ics</span>calendar.ics<span class="chev">›</span></div>
+          <div class="srow"><span style="color:var(--ink3);font-size:9.5px">24 KB · 2026–2027 中国节假日与节气</span></div>
+        </div>
+        <div class="dim"></div>
+        <div class="sheet">
+          <div class="st">用以下方式打开</div>
+          <div style="display:flex;gap:8px;justify-content:center;margin:10px 0 8px">
+            <div style="font-size:8.5px;color:var(--ink2)">◇<br>信息</div>
+            <div style="font-size:8.5px;color:var(--blue);font-weight:600">▣<br>日历</div>
+            <div style="font-size:8.5px;color:var(--ink2)">✎<br>备忘录</div>
+          </div>
+          <div class="btns"><i>取消</i></div>
+        </div>
+      </div></div>
+      <p class="cap"><span class="stepno">2</span><b>打开 .ics → 选「日历」</b><br>微信里点文件 →「…」→ 用其他应用打开 → 日历。</p>
+    </div>
+
+    <div class="shot">
+      <div class="phone"><div class="notch"></div><div class="scr">
+        <div class="sbar"><span>9:41</span><span class="batt"></span></div>
+        <div class="nav"><span class="back">‹</span>新日程</div>
+        <div style="padding:8px 12px;font-size:10px;color:var(--ink2);line-height:1.6">
+          中国节假日与节气<br><b style="color:var(--ink);font-size:12px">春节·休 2/9</b><br>2027年2月6日 全天
+        </div>
+        <div class="slist" style="margin:0 10px">
+          <div class="srow"><span style="flex:1">日历</span><span style="color:var(--blue)">中国节假日 ›</span></div>
+        </div>
+        <div class="sheet">
+          <div class="btns"><i>取消</i><i class="pri">添加全部</i></div>
+        </div>
+      </div></div>
+      <p class="cap"><span class="stepno">3</span><b>点「添加全部」</b><br>一次性导入 121 条，不用逐条点确认。</p>
+    </div>
+
+  </div>
+
+  <div class="note tip">
+    <b>明年怎么办？</b>每年 11 月出新版本后，回来下载新的 <code>.ics</code>，先删掉旧日历再导入新的。想彻底免去这一步，就用下一节的订阅链接。
+  </div>
+
+  <!-- 4 iPhone -->
+  <h2 class="sec"><span class="num">4</span>iPhone 订阅：两条路，选一条</h2>
+  <p class="lead">左边是可横向滑动的界面示意图，跟手机上的操作一一对应。</p>
+
+  <h3 style="font-size:15px;margin:20px 0 10px">路线 A · 最快：直接用链接订阅（推荐，iOS 15 及以上）</h3>
+  <div class="shots">
+
+    <div class="shot">
+      <div class="phone"><div class="notch"></div><div class="scr">
+        <div class="sbar"><span>9:41</span><span class="batt"></span></div>
+        <div class="nav"><span class="back">‹</span>日历</div>
+        <div style="padding:10px 12px;font-size:10px;color:var(--ink3);text-align:center">Safari 打开订阅链接</div>
+        <div style="flex:1;background:#fff;margin:0 10px;border-radius:8px;padding:10px 8px;font-size:9px;color:#555;line-height:1.5">
+          中国节假日与节气 2026–2027<br>
+          <span style="color:#999">国务院办公厅放假通知口径，逐年人工录入…</span>
+        </div>
+        <div class="dim"></div>
+        <div class="sheet">
+          <div class="st">订阅「中国节假日与节气 2026–2027」日历？</div>
+          <div class="sd">来自 cdn.jsdelivr.net</div>
+          <div class="btns"><i>取消</i><i class="pri">订阅</i></div>
+        </div>
+      </div></div>
+      <p class="cap"><span class="stepno">1</span><b>弹出订阅框</b><br>点「订阅」。如果先看到乱码或问号，说明这个地址的 MIME 不对，换一个源。</p>
+    </div>
+
+    <div class="shot">
+      <div class="phone"><div class="notch"></div><div class="scr">
+        <div class="sbar"><span>9:41</span><span class="batt"></span></div>
+        <div class="nav"><span class="back">‹</span>日历</div>
+        <div style="padding:10px 14px 6px;font-size:11px;font-weight:600">订阅日历</div>
+        <div class="slist" style="margin:0 10px">
+          <div class="srow"><span class="ico" style="background:#d70015">日</span>中国节假日与节气 2026–2027<span class="chev">›</span></div>
+          <div class="srow"><span style="color:var(--ink3);font-size:11px">账户：iCloud</span></div>
+        </div>
+        <div style="padding:8px 14px;font-size:9px;color:var(--ink3);line-height:1.6">
+          位置：选择「iCloud」可在多台设备同步<br>
+          提醒：全天事件通常不需要
+        </div>
+        <div class="btns" style="display:flex;gap:6px;margin:10px">
+          <i style="flex:1;font-style:normal;text-align:center;font-size:11px;padding:6px 0;border-radius:6px;background:#f0f0f2">取消</i>
+          <i style="flex:1;font-style:normal;text-align:center;font-size:11px;padding:6px 0;border-radius:6px;background:var(--blue);color:#fff;font-weight:600">存储</i>
+        </div>
+      </div></div>
+      <p class="cap"><span class="stepno">2</span><b>确认账户，点「存储」</b><br>选 iCloud 就能在 iPhone、iPad、Mac 之间同步。</p>
+    </div>
+
+    <div class="shot">
+      <div class="phone"><div class="notch"></div><div class="scr">
+        <div class="sbar"><span>9:41</span><span class="batt"></span></div>
+        <div class="nav" style="padding-bottom:2px"><span class="back">‹</span>2月 <span style="color:var(--ink3);font-weight:400">2027</span></div>
+        <div class="lst">
+          <div class="li"><div class="dt"><b>5</b></div><div class="evt">除夕·休 1/9</div></div>
+          <div class="li"><div class="dt"><b>6</b></div><div class="evt">春节·休 2/9</div></div>
+          <div class="li"><div class="dt"><b>7</b></div><div class="evt">春节假期·休 3/9</div></div>
+          <div class="li"><div class="dt"><b>8</b></div><div class="evt">春节假期·休 4/9</div></div>
+          <div class="li"><div class="dt"><b>9</b></div><div class="evt">春节假期·休 5/9</div></div>
+          <div class="li"><div class="dt"><b>10</b></div><div class="evt">春节假期·休 6/9</div></div>
+          <div class="li"><div class="dt"><b>11</b></div><div class="evt">春节假期·休 7/9</div></div>
+          <div class="li"><div class="dt"><b>12</b></div><div class="evt">春节假期·休 8/9</div></div>
+          <div class="li"><div class="dt"><b>13</b></div><div class="evt">春节假期·休 9/9</div></div>
+          <div class="li"><div class="dt"><b>14</b></div><div class="evt work">春节·班</div></div>
+        </div>
+      </div></div>
+      <p class="cap"><span class="stepno">3</span><b>完成</b><br>标题完整可读，9 天进度递增，2/14 一眼看出是补班。</p>
+    </div>
+
+  </div>
+
+  <h3 style="font-size:15px;margin:22px 0 10px">路线 B · 手动添加（iOS 14 及以下，或链接点不开时）</h3>
+  <div class="shots">
+
+    <div class="shot">
+      <div class="phone"><div class="notch"></div><div class="scr">
+        <div class="sbar"><span>9:41</span><span class="batt"></span></div>
+        <div class="nav"><span class="big">设置</span></div>
+        <div class="slist">
+          <div class="srow"><span class="ico" style="background:#8e8e93">✈</span>飞行模式</div>
+          <div class="srow"><span class="ico" style="background:#34c759">✆</span>蜂窝网络</div>
+          <div class="srow"><span class="ico" style="background:#007aff">✆</span>个人热点</div>
+          <div class="srow"><span class="ico" style="background:#30b0c7">☷</span>通用</div>
+          <div class="srow"><span class="ico" style="background:#5856d6">♫</span>音乐</div>
+          <div class="srow"><span class="ico" style="background:#ff9500">◉</span>Siri 与搜索</div>
+          <div class="srow hl"><span class="ico" style="background:#ff3b30">▣</span>日历<span class="chev">›</span></div>
+        </div>
+      </div></div>
+      <p class="cap"><span class="stepno">1</span><b>设置 → 日历</b><br>系统设置里往下翻，日历在红色图标那一行。</p>
+    </div>
+
+    <div class="shot">
+      <div class="phone"><div class="notch"></div><div class="scr">
+        <div class="sbar"><span>9:41</span><span class="batt"></span></div>
+        <div class="nav"><span class="back">‹ 设置</span>日历</div>
+        <div class="slist">
+          <div class="srow hl"><span style="flex:1">账户</span><span class="chev">›</span></div>
+          <div class="srow"><span style="flex:1">新建日程提醒</span><span class="chev">›</span></div>
+          <div class="srow hl"><span style="flex:1">其他历法<span class="sub">可开启「农历」，零事件显示</span></span><span class="chev">›</span></div>
+          <div class="srow"><span style="flex:1">一周开始于</span><span class="chev">›</span></div>
+          <div class="srow"><span style="flex:1">时区覆盖</span><span class="chev">›</span></div>
+        </div>
+        <div class="note" style="margin:8px 10px;font-size:9px;padding:8px 9px;line-height:1.55">
+          顺手把「其他历法 → 农历」打开：日期下方直接显示农历，不产生任何事件。
+        </div>
+      </div></div>
+      <p class="cap"><span class="stepno">2</span><b>点「账户」</b><br>顺便把「其他历法 → 农历」打开，农历就常驻了。</p>
+    </div>
+
+    <div class="shot">
+      <div class="phone"><div class="notch"></div><div class="scr">
+        <div class="sbar"><span>9:41</span><span class="batt"></span></div>
+        <div class="nav"><span class="back">‹ 日历</span>账户</div>
+        <div class="slist">
+          <div class="srow"><span style="flex:1">iCloud<span class="sub">日历、提醒事项</span></span><span class="chev">›</span></div>
+          <div class="srow"><span style="flex:1">Gmail</span><span class="chev">›</span></div>
+          <div class="srow hl"><span style="flex:1;color:var(--blue)">添加账户</span><span class="chev" style="color:var(--blue)">›</span></div>
+        </div>
+        <div style="padding:10px 14px;font-size:9px;color:var(--ink3);line-height:1.6">
+          已订阅的日历会单独列在账户页最下方，名字就是日历名，退订也从这里删。
+        </div>
+      </div></div>
+      <p class="cap"><span class="stepno">3</span><b>点「添加账户」</b><br>订阅日历在「其他」里面，不在 iCloud 里。</p>
+    </div>
+
+    <div class="shot">
+      <div class="phone"><div class="notch"></div><div class="scr">
+        <div class="sbar"><span>9:41</span><span class="batt"></span></div>
+        <div class="nav"><span class="back">‹ 账户</span>添加账户</div>
+        <div class="slist">
+          <div class="srow"><span class="ico" style="background:#007aff">@</span>iCloud</div>
+          <div class="srow"><span class="ico" style="background:#ea4335">M</span>Google</div>
+          <div class="srow"><span class="ico" style="background:#6e6e73">◫</span>Outlook</div>
+          <div class="srow hl"><span style="flex:1">其他<span class="sub">添加已订阅的日历、通讯录账户</span></span><span class="chev">›</span></div>
+        </div>
+      </div></div>
+      <p class="cap"><span class="stepno">4</span><b>选「其他」</b><br>这一层很多人卡住，因为它长得不像是能加日历的入口。</p>
+    </div>
+
+    <div class="shot">
+      <div class="phone"><div class="notch"></div><div class="scr">
+        <div class="sbar"><span>9:41</span><span class="batt"></span></div>
+        <div class="nav"><span class="back">‹ 添加账户</span>其他</div>
+        <div class="slist">
+          <div class="srow"><span style="flex:1">添加已订阅的日历</span><span class="chev">›</span></div>
+          <div class="srow"><span style="flex:1">添加 CardDAV 账户</span><span class="chev">›</span></div>
+          <div class="srow"><span style="flex:1">添加 CalDAV 账户</span><span class="chev">›</span></div>
+        </div>
+        <div class="inputbox">https://cdn.jsdelivr.net/gh/<br>jacky-wangjj/iphone-calendar-ics<br>@main/calendar.ics</div>
+        <div class="kbd">把订阅地址粘贴到这里 → 下一步 → 存储</div>
+      </div></div>
+      <p class="cap"><span class="stepno">5</span><b>粘贴地址 → 存储</b><br>地址要整条复制，末尾的 <code style="font-size:9px">calendar.ics</code> 不能删。</p>
+    </div>
+
+  </div>
+
+  <div class="note tip">
+    <b>订阅后多久能看到？</b>通常 10 秒内。如果日历是空的，去「日历 → 底部中间的『日历』按钮 → 确认这个订阅打了勾」，再下拉刷新一次。
+  </div>
+
+  <!-- 5 其他平台 -->
+  <h2 class="sec"><span class="num">5</span>其他设备</h2>
+
+  <div class="card">
+    <h3>Mac</h3>
+    <p class="meta">日历 App → 文件 → 新增日历订阅 → 粘贴地址 → 自动刷新选「每天」</p>
+    <p style="font-size:13px;color:var(--ink2);margin:0">用同一个 iCloud 账户时，Mac 上订的日历会自动出现在 iPhone 上，不必重复操作。</p>
+  </div>
+
+  <div class="card">
+    <h3>Android</h3>
+    <p class="meta">不同品牌入口不一样，通用路径是「日历 App → 设置 → 添加日历 → URL 导入」</p>
+    <table class="t">
+      <tr><td style="width:88px">小米</td><td>日历 → 设置 → 日程导入 → URL 导入</td></tr>
+      <tr><td>华为 / 荣耀</td><td>日历 → 设置 → 订阅管理 → 添加订阅</td></tr>
+      <tr><td>原生 Android</td><td>Google 日历网页版 → 其他日历 → 通过网址添加</td></tr>
+      <tr><td>其他</td><td>先「下载 .ics 文件」，再用日历 App 打开导入</td></tr>
+    </table>
+    <div class="note" style="margin-top:12px">
+      Android 上「订阅」和「导入」是两件事：<b>订阅</b>会持续同步，<b>导入</b>只是一次性拷贝、之后不再更新。能用订阅就别用导入。
+    </div>
+  </div>
+
+  <!-- 6 退订 -->
+  <h2 class="sec"><span class="num">6</span>退订、换源与年更</h2>
+
+  <div class="card">
+    <h3>退订</h3>
+    <p style="font-size:13.5px;margin:0 0 10px">iPhone：<b>日历 App → 底部「日历」按钮 → 找到这个订阅 → 点 ⓘ → 删除日历</b>。也可以走「设置 → 日历 → 账户 → 已订阅的日历 → 删除账户」。</p>
+    <p style="font-size:13.5px;margin:0">退订宜忌层不影响主层 —— 两层是完全独立的两个日历账户。</p>
+  </div>
+
+  <div class="card">
+    <h3>会不会每年都要重订一次</h3>
+    <p class="meta">不用。这是订阅日历，不是下载的文件</p>
+    <p style="font-size:13.5px;margin:0 0 10px">每年 11 月国务院发布次年安排后，服务端会<b>覆盖同一个地址</b>里的内容，你的手机下次刷新时自动拿到新数据，接口地址一个字都不变。</p>
+    <p style="font-size:13.5px;margin:0">你怎么知道已经更新了？看日历名字 —— 它会从「中国节假日与节气 2026–2027」变成「中国节假日与节气 2027–2028」。名字里的年份就是更新信号。</p>
+  </div>
+
+  <!-- 7 FAQ -->
+  <h2 class="sec"><span class="num">7</span>常见问题</h2>
+
+  <div class="card">
+    <table class="t">
+      <tr><th style="width:42%">现象</th><th>原因与处理</th></tr>
+      <tr><td>打开链接是一屏乱码</td><td>这个地址的 MIME 不是 <code>text/calendar</code>。典型是 <code>raw.githubusercontent.com</code>，换成 jsDelivr 地址即可。</td></tr>
+      <tr><td>订上了但日历空白</td><td>① 日历 App 底部「日历」里没勾选这个订阅；② 客户端还没刷新，下拉一次或等一小时。</td></tr>
+      <tr><td>同一天出现两条一样的事件</td><td>同时订了「合订版」和「单年版」。删掉单年版，留合订版。</td></tr>
+      <tr><td>标题显示不全，后面是省略号</td><td>月视图宽度有限，横屏或切到列表视图即可看全。本产品标题最长 11 字，列表视图一定能完整显示。</td></tr>
+      <tr><td>年更后 iPhone 上还是旧数据</td><td>客户端默认可能一周才拉一次。下拉刷新，或到「设置 → 日历 → 账户 → 获取新数据」改成「推送 + 每 15 分钟」。</td></tr>
+      <tr><td>能不能只订宜忌，不要节假日</td><td>可以。两层是独立地址，只订 <code>yiji.ics</code> 就行。</td></tr>
+      <tr><td>要占多少空间</td><td>主层 24 KB、宜忌层 163 KB，两次微信图片的量级。订阅日历不存本地图片，也不常驻后台。</td></tr>
+      <tr><td>离线包导入后能自动更新吗</td><td>不能。导入是一次性复制，明年要重新导入一次。想年更自动生效，用第 4 节的订阅链接；两者不要同时用。</td></tr>
+    </table>
+  </div>
+
+  <div class="foot">
+    数据口径：法定节假日依据国务院办公厅年度通知，逐年人工录入，绝不推算；黄历依据《钦定协纪辨方书》底本推算，属民俗参考。<br>
+    本页所有地址于 2026-11-21 实测通过。
+  </div>
+
+</div>
+</body>
+</html>

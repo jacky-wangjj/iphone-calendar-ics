@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>日历增强包 · 离线版</title>
+<style>
+  :root{--bg:#f5f5f7;--card:#fff;--ink:#1d1d1f;--ink2:#6e6e73;--line:#e5e5ea;--red:#d70015;--green:#1d7a3a;--amber:#9a6a00;--blue:#0071e3}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:-apple-system,"SF Pro Text","PingFang SC",system-ui,sans-serif;line-height:1.65;padding:28px 16px 64px}
+  .wrap{max-width:660px;margin:0 auto}
+  h1{font-size:26px;margin:0 0 6px;letter-spacing:-.02em}
+  .sub{color:var(--ink2);font-size:14px;margin:0 0 20px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:14px}
+  h2{font-size:16px;margin:0 0 10px}
+  .meta{color:var(--ink2);font-size:13px;margin:0 0 14px}
+  .dl{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--line);text-decoration:none;color:inherit}
+  .dl:last-child{border-bottom:0}
+  .dl .nm{font-size:14px;font-weight:600}
+  .dl .ds{font-size:12px;color:var(--ink2);display:block;font-weight:400}
+  .dl .go{margin-left:auto;font-size:13px;color:var(--blue);font-weight:600;white-space:nowrap}
+  .tag{display:inline-block;font-size:11px;font-weight:600;padding:2px 7px;border-radius:5px;background:#f0f0f2;color:var(--ink2);vertical-align:1px}
+  .tag.rec{background:#ffe9eb;color:var(--red)}
+  .note{font-size:13px;border-radius:10px;padding:12px 14px;margin-top:12px}
+  .warn{background:#fffbe6;border:1px solid #ffe58f;color:#6b5300}
+  .info{background:#f0f7ff;border:1px solid #cfe4ff;color:#1a4887}
+  ol,ul{margin:0;padding-left:20px;font-size:14px}
+  li{margin-bottom:6px}
+  .foot{color:#86868b;font-size:12px;text-align:center;margin-top:30px;line-height:1.9}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>日历增强包 · 离线版</h1>
+  <p class="sub">6 个日历文件，覆盖 2026–2027 年 · 无需联网 · 双击即用</p>
+
+  <div class="note warn">
+    <b>先明确一件事：这是「导入」，不是「订阅」。</b><br>
+    导入 = 把当下这份数据复制进你的日历，之后<b>不会自动更新</b>。明年出新年份时，你要回来重新导入一次。<br>
+    如果你希望它每年自动更新、什么都不用做，请改用<b>订阅链接</b>（在订阅指南页拿地址，一次配置长期有效）。
+  </div>
+
+  <div class="card">
+    <h2>下载</h2>
+    <p class="meta">一般情况只下第一个就够；两个都下会看到重复事件</p>
+    <a class="dl" href="calendar.ics" download>
+      <div><span class="nm">calendar.ics</span><span class="ds">主层 · 节假日 + 调休 + 节气 + 传统节日 · 121 条 · 24 KB</span></div>
+      <span class="tag rec">推荐</span><span class="go">下载 ›</span>
+    </a>
+    <a class="dl" href="yiji.ics" download>
+      <div><span class="nm">yiji.ics</span><span class="ds">宜忌层 · 每日黄历宜忌 · 730 条 · 163 KB</span></div>
+      <span class="go">下载 ›</span>
+    </a>
+    <a class="dl" href="calendar-2026.ics" download>
+      <div><span class="nm">calendar-2026.ics</span><span class="ds">只要 2026 单年 · 62 条</span></div>
+      <span class="go">下载 ›</span>
+    </a>
+    <a class="dl" href="calendar-2027.ics" download>
+      <div><span class="nm">calendar-2027.ics</span><span class="ds">只要 2027 单年 · 59 条</span></div>
+      <span class="go">下载 ›</span>
+    </a>
+    <a class="dl" href="yiji-2026.ics" download>
+      <div><span class="nm">yiji-2026.ics</span><span class="ds">2026 单年宜忌 · 365 条</span></div>
+      <span class="go">下载 ›</span>
+    </a>
+    <a class="dl" href="yiji-2027.ics" download>
+      <div><span class="nm">yiji-2027.ics</span><span class="ds">2027 单年宜忌 · 365 条</span></div>
+      <span class="go">下载 ›</span>
+    </a>
+  </div>
+
+  <div class="card">
+    <h2>怎么用</h2>
+    <p class="meta">按你手上的设备选一条</p>
+    <ol>
+      <li><b>iPhone / iPad</b>：用「文件」App 或微信打开 <code>.ics</code> → 点右上角分享 → 用「日历」打开 → 添加全部</li>
+      <li><b>Mac</b>：双击 <code>.ics</code> → 日历 App 弹出导入提示 → 选目标日历 → 导入</li>
+      <li><b>微信传文件</b>：直接把整个文件夹或单个 <code>.ics</code> 发给对方，对方在手机上点开即可</li>
+      <li><b>Outlook / Windows</b>：双击 <code>.ics</code>，或拖进 Outlook 日历窗口</li>
+    </ol>
+    <div class="note info">
+      导入时系统会问「加到哪个日历」。建议<b>新建一个日历</b>再导入，这样以后想整体删除，一键就能清干净，不会和你的私人日程混在一起。
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>和订阅版有什么区别</h2>
+    <p class="meta">两种方式的数据完全一样，差别只在「之后要不要管」</p>
+    <ul>
+      <li><b>离线导入</b>：不联网、不看服务器脸色、数据完全在你手里；代价是明年要手动再来一次</li>
+      <li><b>链接订阅</b>：一次配置，年更自动生效，地址永不改变；代价是需要一个能长期访问的服务器</li>
+      <li>两者<b>不要同时用</b>，否则同一天会出现两条一模一样的事件</li>
+    </ul>
+  </div>
+
+  <div class="foot">
+    数据口径：法定节假日依据国务院办公厅年度通知，逐年人工录入，绝不推算；<br>
+    黄历依据《钦定协纪辨方书》底本推算，属民俗参考，不构成任何决策依据。<br>
+    生成于 2026-11-21
+  </div>
+</div>
+</body>
+</html>
