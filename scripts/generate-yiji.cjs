@@ -41,6 +41,11 @@ const calNameFor = (years) =>
 /** 标题长度上限（U7） */
 const TITLE_LIMIT = 18;
 
+/** 日历简介（X-WR-CALDESC），显示在 iOS 日历「简介」里 */
+const CAL_DESC =
+  `每日黄历宜忌，依据《钦定协纪辨方书》底本口径推算，二十四节气与农历取自 lunar 历法库。` +
+  `属民俗参考，不构成任何决策依据。年更时覆盖同一地址，无需重新订阅。`;
+
 /** 节日/节气的判定白名单，与主订阅层保持一致 */
 const TRADITIONAL_FESTIVALS = new Set([
   '除夕',
@@ -240,7 +245,12 @@ function main() {
     const mdPath = path.join(OUT_DIR, `${year}-宜忌核对表.md`);
     fs.writeFileSync(
       icsPath,
-      serializeIcs({ events, calName: calNameFor([year]), prodid: PRODID }),
+      serializeIcs({
+        events,
+        calName: calNameFor([year]),
+        prodid: PRODID,
+        desc: CAL_DESC,
+      }),
       'utf8'
     );
     fs.writeFileSync(mdPath, toChecklist(result, year), 'utf8');
@@ -264,7 +274,12 @@ function main() {
 
   if (MULTI) {
     const span = `${YEARS[0]}-${YEARS[YEARS.length - 1]}`;
-    const merged = serializeIcs({ events: allEvents, calName: calNameFor(YEARS), prodid: PRODID });
+    const merged = serializeIcs({
+      events: allEvents,
+      calName: calNameFor(YEARS),
+      prodid: PRODID,
+      desc: CAL_DESC,
+    });
     const spanPath = path.join(OUT_DIR, `yiji-${span}.ics`);
     const fixedPath = path.join(OUT_DIR, 'yiji.ics');
     fs.writeFileSync(spanPath, merged, 'utf8');

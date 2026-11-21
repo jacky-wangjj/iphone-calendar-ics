@@ -4,7 +4,13 @@ PRODID:-//iPhone 日历增强包//黄历宜忌//CN
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
 X-WR-CALNAME:黄历宜忌 2027
+X-WR-CALDESC:每日黄历宜忌，依据《钦定协纪辨方书》底本
+ 口径推算，二十四节气与农历取自 lunar 历法库。属民俗
+ 参考，不构成任何决策依据。年更时覆盖同一地址，无
+ 需重新订阅。
 X-WR-TIMEZONE:Asia/Shanghai
+X-PUBLISHED-TTL:PT24H
+REFRESH-INTERVAL;VALUE=DURATION:PT24H
 BEGIN:VEVENT
 UID:20270101-yiji-2027@calendar-enhance.local
 DTSTAMP:20261121T000000Z

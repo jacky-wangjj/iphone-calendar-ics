@@ -140,11 +140,13 @@ function buildEvents(year) {
 
       if (hol) {
         // 假期内若落在独立传统节日当天（如除夕落在春节假期首日），以节日名标注，避免该日身份被假期名覆盖
-        const title = hol.festName
+        const base = hol.festName
           ? `${hol.festName}·休`
           : hol.index === hol.mainIdx
             ? `${hol.name}·休`
             : `${hol.name}假期·休`;
+        // 假期进度：一眼看出「还剩几天」，不用去数。用 3/9 而非「第3天/共9天」，省 4 个字符
+        const title = `${base} ${hol.index + 1}/${hol.total}`;
         const absorbed = [fest, jq].filter(Boolean);
         events.push({
           date: k,
@@ -188,7 +190,16 @@ function buildEvents(year) {
 /* ---------------- iCalendar 序列化（复用 lib/ics.cjs） ---------------- */
 
 const toIcs = (events, years) =>
-  serializeIcs({ events, calName: calNameFor(years), prodid: PRODID });
+  serializeIcs({
+    events,
+    calName: calNameFor(years),
+    prodid: PRODID,
+    // 显示在 iOS 日历「简介」：用户点开就能看到数据口径，不必来问
+    desc:
+      `国务院办公厅放假通知口径，逐年人工录入，绝不推算。含法定节假日、调休补班、二十四节气、传统节日。` +
+      `覆盖 ${years[0]}–${years[years.length - 1]} 年，假期标注进度（如 春节假期·休 3/9）。` +
+      `年更时覆盖同一地址，无需重新订阅。`,
+  });
 
 /* ---------------- 核对表（对应 PRD 验收第 1 条） ---------------- */
 

@@ -62,12 +62,13 @@ function fold(line) {
  * @param {string} opt.calName       X-WR-CALNAME
  * @param {string} opt.prodid        PRODID
  * @param {number} [opt.year]        单年生成时传入；多年度合并时省略
+ * @param {string} [opt.desc]        X-WR-CALDESC，显示在 iOS 日历「简介」里
  * @param {string} [opt.uidDomain]   UID 域名后缀
  *
  * UID 取「事件自身年份」，不用文件年份——这样单年文件与多年合并文件里
  * 同一天事件的 UID 完全一致，年更覆盖时不会让客户端把事件当成新的重挂一遍。
  */
-function serializeIcs({ events, calName, prodid, year, uidDomain = 'calendar-enhance.local' }) {
+function serializeIcs({ events, calName, prodid, year, desc, uidDomain = 'calendar-enhance.local' }) {
   // DTSTAMP 默认取当前时间；用 DTSTAMP=20261121T000000Z 可做可复现构建（两次生成字节级一致，便于 diff 核对）
   const stamp =
     process.env.DTSTAMP || new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
@@ -78,8 +79,14 @@ function serializeIcs({ events, calName, prodid, year, uidDomain = 'calendar-enh
     'CALSCALE:GREGORIAN',
     'METHOD:PUBLISH',
     `X-WR-CALNAME:${escText(calName)}`,
-    'X-WR-TIMEZONE:Asia/Shanghai',
   ];
+  if (desc) lines.push(`X-WR-CALDESC:${escText(desc)}`);
+  lines.push(
+    'X-WR-TIMEZONE:Asia/Shanghai',
+    // 提示客户端刷新频率：数据年更，每天拉一次足够；不写则由客户端自行决定（iOS 默认每周）
+    'X-PUBLISHED-TTL:PT24H',
+    'REFRESH-INTERVAL;VALUE=DURATION:PT24H'
+  );
 
   for (const ev of events) {
     const { y, m, d } = parseDate(ev.date);
